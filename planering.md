@@ -2,6 +2,7 @@
 
 0. ~~Skiss~~
 1.  ~~ER-diagram~~
+![ER-diagram](misc/icon48.png "ER-diagram")
 2.  Bygg databas
 3. Arkitektur
 4. Inlogg
