@@ -1,0 +1,25 @@
+h1 Investments for user #{session[:user]}:
+
+p = investments
+
+table
+  tr
+    th Item
+    th Amount
+    th A-price
+    th Total
+    th Seller
+    th Date
+    th Stored
+    th Edit
+  - investments.each do |item|
+    tr 
+      td = item["item_name"]
+      td = item["amount"]
+      td = item["aprice"]
+      td = item["total"]
+      td = item["seller_name"]
+      td = item["date"]
+      td = item["storage_place"]
+      td 
+        a href="#" edit
