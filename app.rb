@@ -64,8 +64,32 @@ get('/investments/') do
 end
 
 get('/investments/new') do
+
   slim(:"investments/new")
 end
+
+post('/investments/new') do
+  item_name = params["item_name"]
+  amount = params["amount"]  
+  aprice = params["aprice"]  
+  total = params["total"]  
+  seller = params["seller"]  
+  date = params["date"]  
+  storage_place= params["storage_place"]  
+  user_id = 1
+  
+  if (session[:user] != nil)
+    if new_investment(user_id,item_name,amount,aprice,total,seller,date,storage_place) == true
+      redirect('/investments')
+    else
+      set_error("Something want crazy with your post")
+      redirect('/error')
+    end
+  end
+  
+end
+
+
 
 post('/login') do
   username = params["username"]
@@ -85,10 +109,6 @@ post('/login') do
   else
     set_error(errormsg)
   end
-
-
-	
-
 end
 
 
