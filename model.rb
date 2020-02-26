@@ -64,9 +64,9 @@ def get_investments_for_user(user)
       return investments
     end
 
-def get_id_from_value(table,value)
+def get_id_from_value(table,column,value)
   db = connect_to_db()
-  values = db.execute("SELECT * FROM ? WHERE id=?",table,id).first
+  values = db.execute("SELECT * FROM #{table} WHERE #{column}=?",value).first
   return values
 end
 
@@ -75,29 +75,24 @@ def new_investment(user_id,item_name,amount,aprice,total,seller,date,storage_pla
     return false
   else
     db = connect_to_db()
-    #user 
-    db.execute("INSERT INTO investments (user_id) VALUES (?)",user_id)
-    #item_name + item_id
-    db.execute("INSERT INTO items VALUES (?)",item_name)
-    fetched_item_id = get_id_from_value("items",item_name)["item_name"]
-    db.execute("INSERT INTO investments (item_id) VALUES (?)",fetched_item_id.to_i)
-    #amount 
-    db.execute("INSERT INTO investments (amount) VALUES (?)",amount.to_i)
-    #aprice
-    db.execute("INSERT INTO investments (aprice) VALUES (?)",aprice.to_i)
-    #total
-    db.execute("INSERT INTO investments (total) VALUES (?)",total.to_i)
-    #seller,seller_id
-    db.execute("INSERT INTO sellers VALUES (?)",seller)
-    fetched_seller_id = get_id_from_value("sellers",seller)["seller_name"]
-    db.execute("INSERT INTO investments (seller_id) VALUES (?)",fetched_seller_id.to_i)
-    #date
-    db.execute("INSERT INTO investments (date) VALUES (?)",date)
-    #storage,store_id
-    db.execute("INSERT INTO storages VALUES (?)",storage_place)
-    fetched_storage_place_id = get_id_from_value("storages",storage_place)["storage_place"]
-    db.execute("INSERT INTO investments (storage_place_id) VALUES (?)",fetched_storage_place_id.to_i)
 
+    #CHECK IF UNIQUE FIRST
+    #storage_place
+    db.execute("INSERT INTO storages (storage_place) VALUES (?)",storage_place)
+    #item_name
+    db.execute("INSERT INTO items (item_name) VALUES (?)",item_name)
+    #seller
+    db.execute("INSERT INTO sellers (seller_name) VALUES (?)",seller)
+
+    #Foreign keys
+    fetched_storage_place_id = get_id_from_value("storages","storage_place",storage_place)["id"]
+    fetched_seller_id = get_id_from_value("sellers","seller_name",seller)["id"]
+    fetched_item_id = get_id_from_value("items","item_name",item_name)["id"]
+
+    #Investments
+    db.execute("INSERT INTO investments (amount,aprice,total,date,user_id,storage_place_id,seller_id,item_id)
+     VALUES (?,?,?,?,?,?,?,?)",amount.to_i,aprice.to_i,total.to_i,date,user_id,fetched_storage_place_id.to_i,fetched_seller_id.to_i,fetched_item_id.to_i)
+    
     return true
 
   end
