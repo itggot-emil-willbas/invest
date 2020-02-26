@@ -70,6 +70,18 @@ def get_id_from_value(table,column,value)
   return values
 end
 
+def check_if_exists(table,column,value)
+  db = connect_to_db()
+  result = db.execute("SELECT * from #{table} WHERE #{column} = ?",value)
+  if result == []
+    p "Nothing new! Returning false"
+    return false
+  else
+    p "There was something new! Returning true"
+    return true
+  end
+end
+
 def new_investment(user_id,item_name,amount,aprice,total,seller,date,storage_place)
   if validate_new_investment(user_id,item_name,amount,aprice,total,seller,date,storage_place) != true
     return false
@@ -78,11 +90,23 @@ def new_investment(user_id,item_name,amount,aprice,total,seller,date,storage_pla
 
     #CHECK IF UNIQUE FIRST
     #storage_place
-    db.execute("INSERT INTO storages (storage_place) VALUES (?)",storage_place)
+    if check_if_exists("storages","storage_place",storage_place) == false
+      db.execute("INSERT INTO storages (storage_place) VALUES (?)",storage_place)
+    else
+      p "Storage fanns redan"
+    end
     #item_name
-    db.execute("INSERT INTO items (item_name) VALUES (?)",item_name)
+    if check_if_exists("items","item_name",item_name) == false
+      db.execute("INSERT INTO items (item_name) VALUES (?)",item_name)
+    else
+      p "item fanns redan"
+    end
     #seller
-    db.execute("INSERT INTO sellers (seller_name) VALUES (?)",seller)
+    if check_if_exists("sellers","seller_name",seller) == false
+      db.execute("INSERT INTO sellers (seller_name) VALUES (?)",seller)
+    else
+      p "Seller fanns redan"
+    end
 
     #Foreign keys
     fetched_storage_place_id = get_id_from_value("storages","storage_place",storage_place)["id"]
