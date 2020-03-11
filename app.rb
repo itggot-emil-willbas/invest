@@ -68,6 +68,38 @@ get('/investments/new') do
   slim(:"investments/new")
 end
 
+get('/investments/:id/edit') do
+  invest_id = params["id"]
+  p "Invest_id: #{invest_id}"
+  investment = get_investment_readable_data(invest_id).first #skapa
+  p "investment: #{investment}"
+  slim(:"investments/edit",locals:{investment:investment})
+  
+end
+
+post('/investments/:id/update') do
+  item_name = params["item_name"]
+  amount = params["amount"]  
+  aprice = params["aprice"]  
+  total = params["total"]  
+  seller = params["seller"]  
+  date = params["date"]  
+  storage_place= params["storage_place"]  
+  user_id = 1
+  update = true
+  invest_id = params["id"]
+
+  if (session[:user] != nil)
+    if new_investment(user_id,item_name,amount,aprice,total,seller,date,storage_place,update,invest_id) == true
+      redirect('/investments/')
+    else
+      set_error("Something want crazy with your update")
+      redirect('/error')
+    end
+  end
+
+end
+
 post('/investments/new') do
   item_name = params["item_name"]
   amount = params["amount"]  
@@ -77,10 +109,13 @@ post('/investments/new') do
   date = params["date"]  
   storage_place= params["storage_place"]  
   user_id = 1
+  update = false
+  invest_id = ""
+  
   
   if (session[:user] != nil)
-    if new_investment(user_id,item_name,amount,aprice,total,seller,date,storage_place) == true
-      redirect('/investments')
+    if new_investment(user_id,item_name,amount,aprice,total,seller,date,storage_place,update,invest_id) == true
+      redirect('/investments/')
     else
       set_error("Something want crazy with your post")
       redirect('/error')
@@ -112,3 +147,35 @@ post('/login') do
 end
 
 
+
+get('/upload_image') do
+  slim(:upload_image)
+end
+
+post('/upload_image') do
+  #Skapa en sträng med join "./public/uploaded_pictures/cat.png"
+  path = File.join("./public/uploaded_pictures/",params[:file][:filename]) 
+  
+  #Skriv till path innehållet i tempfile
+  File.write(path,File.read(params[:file][:tempfile]))
+  
+  redirect('/upload_image')
+end
+
+
+# p "Path: #{path}"
+#   p "Params[:file]: #{params[:file]}"
+#   p "Params[:file][:filename]: #{params[:file][:filename]}"
+#   p "Params[:file][:tempfile]: #{params[:file][:tempfile]}"
+  
+  # p params[:file][:tempfile]
+  # File.open('public/uploaded_pictures/' + params[:file][:filename], "w") do |f|
+  #   f.write(params[:file][:tempfile].read)
+  # end
+
+  #@filename = params[:file][:filename]
+  #file = params[:file][:tempfile]
+  #File.open("./public/uploaded_pictures/#{@filename}", 'wb') do |f|
+  #  f.write(file.read)
+  #end
+  #return @filename

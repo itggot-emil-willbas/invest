@@ -42,11 +42,15 @@ def login(username,password,password_confirmation)
   end
 end
 
-
+def get_all(table_name,id)
+  db = connect_to_db()
+  result = db.execute("SELECT * FROM #{table_name} WHERE id = ?",id.to_i)
+  return result
+end
 
 def get_investments_for_user(user)
   db = connect_to_db()
-  investments = db.execute("SELECT
+    investments = db.execute("SELECT
     investments.id,
     investments.amount,
     investments.aprice,
@@ -63,6 +67,26 @@ def get_investments_for_user(user)
       WHERE user_id = ?",user)
       return investments
     end
+
+    def get_investment_readable_data(invest_id)
+      db = connect_to_db()
+        investment = db.execute("SELECT
+        investments.id,
+        investments.amount,
+        investments.aprice,
+        investments.total,
+        investments.date,
+        investments.item_id,
+        items.item_name,
+        sellers.seller_name,
+        storages.storage_place
+        FROM (((investments 
+          INNER JOIN items ON investments.item_id = items.id)
+          INNER JOIN sellers ON investments.seller_id = sellers.id)
+          INNER JOIN storages ON investments.storage_place_id = storages.id)
+          WHERE investments.id = ?",invest_id.to_i)
+          return investment
+        end
 
 def get_id_from_value(table,column,value)
   db = connect_to_db()
@@ -82,44 +106,40 @@ def check_if_exists(table,column,value)
   end
 end
 
-def new_investment(user_id,item_name,amount,aprice,total,seller,date,storage_place)
+def new_investment(user_id,item_name,amount,aprice,total,seller,date,storage_place,update,invest_id)
   if validate_new_investment(user_id,item_name,amount,aprice,total,seller,date,storage_place) != true
     return false
   else
     db = connect_to_db()
 
     #CHECK IF UNIQUE FIRST
-    #storage_place
     if check_if_exists("storages","storage_place",storage_place) == false
       db.execute("INSERT INTO storages (storage_place) VALUES (?)",storage_place)
     else
       p "Storage fanns redan"
     end
-    #item_name
     if check_if_exists("items","item_name",item_name) == false
       db.execute("INSERT INTO items (item_name) VALUES (?)",item_name)
     else
       p "item fanns redan"
     end
-    #seller
     if check_if_exists("sellers","seller_name",seller) == false
       db.execute("INSERT INTO sellers (seller_name) VALUES (?)",seller)
     else
       p "Seller fanns redan"
     end
 
-    #Foreign keys
     fetched_storage_place_id = get_id_from_value("storages","storage_place",storage_place)["id"]
     fetched_seller_id = get_id_from_value("sellers","seller_name",seller)["id"]
     fetched_item_id = get_id_from_value("items","item_name",item_name)["id"]
 
-    #Investments
-    db.execute("INSERT INTO investments (amount,aprice,total,date,user_id,storage_place_id,seller_id,item_id)
-     VALUES (?,?,?,?,?,?,?,?)",amount.to_i,aprice.to_i,total.to_i,date,user_id,fetched_storage_place_id.to_i,fetched_seller_id.to_i,fetched_item_id.to_i)
-    
+    if update == false
+      db.execute("INSERT INTO investments (amount,aprice,total,date,user_id,storage_place_id,seller_id,item_id)
+      VALUES (?,?,?,?,?,?,?,?)",amount.to_i,aprice.to_i,total.to_i,date,user_id,fetched_storage_place_id.to_i,fetched_seller_id.to_i,fetched_item_id.to_i)
+    else
+      db.execute("UPDATE investments SET amount = ?,aprice = ?,total = ?,date = ?,user_id = ?,storage_place_id = ?,seller_id = ?,item_id = ? WHERE investments.id = ? ",amount.to_i,aprice.to_i,total.to_i,date,user_id,fetched_storage_place_id.to_i,fetched_seller_id.to_i,fetched_item_id.to_i,invest_id.to_i)
+    end
     return true
-
-  end
-  
-      
+  end    
 end
+
