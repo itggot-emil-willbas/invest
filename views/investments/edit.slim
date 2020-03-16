@@ -1,31 +1,31 @@
-p = investment
+/p = investment
 
 h1 Edit investment
 
 
 
 form action="/investments/#{investment["id"]}/update" method="POST"
-  section class="formsection"  
+  div class="form-group"  
     label for="new_item" Item: 
-    input id="new_item" name="item_name" value="#{investment["item_name"]}" type="text"
-  section class="formsection"  
+    input class="form-control" id="new_item" name="item_name" value="#{investment["item_name"]}" type="text"
+  div class="form-group"  
     label for="new_amount" Amount: 
-    input id="new_amount" name="amount" value="#{investment["amount"]}" type="number"
-  section class="formsection"  
+    input class="form-control" id="new_amount" name="amount" value="#{investment["amount"]}" type="number"
+  div class="form-group"  
     label for="new_aprice" aPrice: 
-    input id="new_aprice" name="aprice" value="#{investment["aprice"]}" type="number"
-  section class="formsection"  
+    input class="form-control" id="new_aprice" name="aprice" value="#{investment["aprice"]}" type="number"
+  div class="form-group"  
     label for="new_total" Total: 
-    input id="new_total" name="total" value="#{investment["total"]}" type="number"
-  section class="formsection"  
+    input class="form-control" id="new_total" name="total" value="#{investment["total"]}" type="number"
+  div class="form-group"  
     label for="new_seller" Seller: 
-    input id="new_seller" name="seller" value="#{investment["seller_name"]}" type="text"
-  section class="formsection"  
+    input class="form-control" id="new_seller" name="seller" value="#{investment["seller_name"]}" type="text"
+  div class="form-group"  
     label for="new_date" Date: 
-    input id="new_date" name="date" value="#{investment["date"]}" type="date"
-  section class="formsection"  
+    input class="form-control" id="new_date" name="date" value="#{investment["date"]}" type="date"
+  div class="form-group"  
     label for="new_store" Storage 
-    input id="new_store" name="storage_place" value="#{investment["storage_place"]}" type="text"
-  section class="formsection"  
+    input class="form-control" id="new_store" name="storage_place" value="#{investment["storage_place"]}" type="text"
+  div class="form-group"  
     label for="new_submit" Submit:
-    input id="new_submit" type="submit" value="Update"
+    input class="form-control" id="new_submit" type="submit" value="Update"

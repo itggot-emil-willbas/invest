@@ -1,8 +1,8 @@
 h1 Investments for user #{session[:user]}:
 
-p = investments
+/p = investments
 
-table
+table class="table table-striped table-dark"
   tr
     th Item
     th Amount
@@ -12,6 +12,7 @@ table
     th Date
     th Stored
     th Edit
+    th Delete
   - investments.each do |item|
     tr 
       td = item["item_name"]
@@ -23,3 +24,5 @@ table
       td = item["storage_place"]
       td 
         a href="/investments/#{item["id"]}/edit" edit
+      td 
+        a class="red-delete" href="/investments/#{item["id"]}/delete" X

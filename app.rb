@@ -59,7 +59,7 @@ end
 
 get('/investments/') do
   user = session[:user]
-  investments = get_investments_for_user(user)
+  investments = get_investments_for_user(user).reverse()
   slim(:"investments/index",locals:{investments:investments})
 end
 
@@ -100,6 +100,11 @@ post('/investments/:id/update') do
 
 end
 
+post('/investments/:id/delete') do
+  invest_id = params["id"]
+  #kolla vilka om fler invests har samma foreignKeys. Om inte: ta bort från tabell2 
+end
+
 post('/investments/new') do
   item_name = params["item_name"]
   amount = params["amount"]  
@@ -111,8 +116,7 @@ post('/investments/new') do
   user_id = 1
   update = false
   invest_id = ""
-  
-  
+    
   if (session[:user] != nil)
     if new_investment(user_id,item_name,amount,aprice,total,seller,date,storage_place,update,invest_id) == true
       redirect('/investments/')

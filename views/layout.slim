@@ -4,13 +4,16 @@ html lang="en"
     meta charset="UTF-8"/
     meta name="viewport" content="width=device-width, initial-scale=1.0"/
     meta http-equiv="X-UA-Compatible" content="ie=edge"/
+    /link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous"
+    link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/darkly/bootstrap.min.css"/
     link rel="stylesheet" href="/css/style.css"/
+    script src="/js/main.js"
     title Investments
   body
-    nav
-      a href="/" Start
-      a href="/investments/" All 
-      a href="/investments/new" New
-      a href="/upload_image" Upload
-    h1 Investments
+    nav class="navbar"
+      a class="navbar-brand" href="/" INVESTMENTS
+      a class="navlink" href="/investments/" All 
+      a class="navlink" href="/investments/new" New
+      a class="navlink" href="/upload_image" Upload
+    
     ==yield
