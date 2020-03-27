@@ -102,7 +102,10 @@ end
 
 post('/investments/:id/delete') do
   invest_id = params["id"]
-  #kolla vilka om fler invests har samma foreignKeys. Om inte: ta bort från tabell2 
+  #kolla vilka om fler invests har samma foreignKeys. 
+  #Om inte: ta bort från tabell2
+  delete_investment(invest_id)
+  redirect('/investments/')
 end
 
 post('/investments/new') do

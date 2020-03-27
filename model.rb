@@ -106,6 +106,8 @@ def check_if_exists(table,column,value)
   end
 end
 
+def delete_cascade()
+
 def new_investment(user_id,item_name,amount,aprice,total,seller,date,storage_place,update,invest_id)
   if validate_new_investment(user_id,item_name,amount,aprice,total,seller,date,storage_place) != true
     return false
@@ -143,3 +145,16 @@ def new_investment(user_id,item_name,amount,aprice,total,seller,date,storage_pla
   end    
 end
 
+def delete_investment(invest_id)
+  # lists = [
+  #   {
+  #     table:"investments",column:"seller_id",value:
+  #   }
+  # ]
+  # lists.each do |list|
+  db = connect_to_db()
+  foreign_keys = db.execute("SELECT item_id,seller_id,storage_place_id FROM investments WHERE id=?",invest_id)
+  delete_cascade()
+  db.execute("DELETE FROM investments WHERE id = ?",invest_id)
+
+end
